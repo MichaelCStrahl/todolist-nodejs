@@ -4,7 +4,7 @@ import { json } from "./middleware/json.js"
 
 const server = http.createServer(async (request, response) => {
   const { method, url } = request
-  
+
   await json(request, response)
 
   const route = routes.find(route => {

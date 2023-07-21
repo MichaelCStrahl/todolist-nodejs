@@ -1,16 +1,36 @@
+import { Database } from "./database.js"
+import { randomUUID } from 'node:crypto'
+
+const database = new Database()
+
 export const routes = [
   {
     method: 'GET',
     path: '/tasks',
     handler: (request, response) => {
-      return response.end('Listagem de usuários')
+      const tasks = database.select('tasks')
+
+      return response.end(JSON.stringify(tasks))
     }
   },
   {
     method: 'POST',
     path: '/tasks',
     handler: (request, response) => {
-      return response.end('Criação de usuários')
+      const { title, description } = request.body
+
+      const task = {
+        id: randomUUID(),
+        title,
+        description,
+        completed_at: null,
+        created_at: new Date(),
+        updated_at: new Date(),
+      }
+
+      database.insert('tasks', task)
+      
+      return response.writeHead(201).end()
     }
   }
 ]
